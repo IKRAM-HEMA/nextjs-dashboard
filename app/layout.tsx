@@ -1,5 +1,11 @@
-import '@/app/ui/global.css';
-import { inter } from '@/app/ui/fonts';
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs';
+import './ui/global.css';
 
 export default function RootLayout({
   children,
@@ -7,8 +13,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body>
+          <header>
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </header>
+          <main>{children}</main>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
