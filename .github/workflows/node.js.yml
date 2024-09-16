@@ -1,0 +1,47 @@
+name: Deploy Next.js App
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Copy secrets
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL || 'default' }}
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID || 'default' }}
+        GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET || 'default' }}
+        NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET || 'default' }}
+        NODE_ENV: ${{ secrets.NODE_ENV || 'default' }}
+        NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL || 'default' }}
+      run: |
+        echo "DATABASE_URL=${DATABASE_URL}" >> .env
+        echo "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" >> .env
+        echo "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" >> .env
+        echo "NEXTAUTH_SECRET=${NEXTAUTH_SECRET}" >> .env
+        echo "NODE_ENV=${NODE_ENV}" >> .env
+        echo "NEXTAUTH_URL=${NEXTAUTH_URL}" >> .env
+
+    - name: Build
+      run: npm run build
+
+    - name: Start application
+      run: |
+        npx pm2 delete hema-nextjs-client || true
+        npx pm2 start npm --name "hema-nextjs-client" -- start

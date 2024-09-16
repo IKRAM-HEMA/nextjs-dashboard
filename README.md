@@ -1,5 +1,14 @@
-## Next.js App Router Course - Starter
+<div align="center">
+  <h1><code><a href="https://next-auth.js.org/">next-auth</a></code> with App Router</h1>
+  <em>Demo coming soon!</em>
+</div>
 
-This is the starter template for the Next.js App Router Course. It contains the starting code for the dashboard application.
+## Description
 
-For more information, see the [course curriculum](https://nextjs.org/learn) on the Next.js Website.
+This is a sample project that demonstrates how to use [next-auth](https://next-auth.js.org/) with [App Router](https://nextjs.org/docs/app).
+
+## What is included?
+
+- User login & registration using OAuth providers (Google and GitHub)
+- User login & registration using email and password (Credentials)
+- User login & registration using mobile OTP (Custom)
