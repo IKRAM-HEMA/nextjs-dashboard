@@ -1,108 +1,148 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { signOut, useSession } from 'next-auth/react';
-import Link from 'next/link';
-import Button from '@/components/Button';
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@radix-ui/react-tooltip';
-import { Package2, Home, Users2, Settings, Search } from 'lucide-react';
+import Link from "next/link";
+import { Package2, Menu, Search, CircleUser } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
-function AuthButton() {
-	const { data: session } = useSession();
-	const router = useRouter();
-
-	if (session) {
-		return (
-			<Button variant="destructive" onClick={() => signOut()}>
-				Logout
-			</Button>
-		);
-	}
-
-	return (
-		<>
-			<Button variant="ghost" onClick={() => router.push('/login')}>
-				Login
-			</Button>
-			<Button variant="ghost" onClick={() => router.push('/register')}>
-				Register
-			</Button>
-		</>
-	);
+export default function NavMenu() {
+  return (
+    <header className='sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6'>
+      <nav className='hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6'>
+        <Link
+          href='#'
+          className='flex items-center gap-2 text-lg font-semibold md:text-base'
+        >
+          <Package2 className='h-6 w-6' />
+          <span className='sr-only'>Acme Inc</span>
+        </Link>
+        <Link
+          href='#'
+          className='text-foreground transition-colors hover:text-foreground'
+        >
+          Dashboard
+        </Link>
+        <Link
+          href='#'
+          className='text-muted-foreground transition-colors hover:text-foreground'
+        >
+          Orders
+        </Link>
+        <Link
+          href='#'
+          className='text-muted-foreground transition-colors hover:text-foreground'
+        >
+          Products
+        </Link>
+        <Link
+          href='#'
+          className='text-muted-foreground transition-colors hover:text-foreground'
+        >
+          Customers
+        </Link>
+        <Link
+          href='#'
+          className='text-muted-foreground transition-colors hover:text-foreground'
+        >
+          Analytics
+        </Link>
+      </nav>
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant='outline' size='icon' className='shrink-0 md:hidden'>
+            <Menu className='h-5 w-5' />
+            <span className='sr-only'>Toggle navigation menu</span>
+          </Button>
+        </SheetTrigger>
+        <SheetContent side='left'>
+          <nav className='grid gap-6 text-lg font-medium'>
+            <Link
+              href='#'
+              className='flex items-center gap-2 text-lg font-semibold'
+            >
+              <Package2 className='h-6 w-6' />
+              <span className='sr-only'>Acme Inc</span>
+            </Link>
+            <Link href='#' className='hover:text-foreground'>
+              Dashboard
+            </Link>
+            <Link
+              href='#'
+              className='text-muted-foreground hover:text-foreground'
+            >
+              Orders
+            </Link>
+            <Link
+              href='#'
+              className='text-muted-foreground hover:text-foreground'
+            >
+              Products
+            </Link>
+            <Link
+              href='#'
+              className='text-muted-foreground hover:text-foreground'
+            >
+              Customers
+            </Link>
+            <Link
+              href='#'
+              className='text-muted-foreground hover:text-foreground'
+            >
+              Analytics
+            </Link>
+          </nav>
+        </SheetContent>
+      </Sheet>
+      <div className='flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4'>
+        <form className='ml-auto flex-1 sm:flex-initial'>
+          <div className='relative'>
+            <Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
+            <Input
+              type='search'
+              placeholder='Search products...'
+              className='pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]'
+            />
+          </div>
+        </form>
+        <DropdownMenu>
+          <SignedOut>
+            <SignInButton>
+              <button>Sign In</button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          {/* <DropdownMenuTrigger asChild>
+            <Button variant='secondary' size='icon' className='rounded-full'>
+              <CircleUser className='h-5 w-5' />
+              <span className='sr-only'>Toggle user menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href='/settings'>Settings</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href='/support'>Support</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild></DropdownMenuItem>
+          </DropdownMenuContent> */}
+        </DropdownMenu>
+      </div>
+    </header>
+  );
 }
-
-const NavMenu = () => {
-	const { data: session } = useSession();
-
-	return (
-		 <aside className='fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex'>
-        <nav className='flex flex-col items-center gap-4 px-2 sm:py-5'>
-          <Link
-            href='#'
-            className='group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base'
-          >
-            <Package2 className='h-4 w-4 transition-all group-hover:scale-110' />
-            <span className='sr-only'>Acme Inc</span>
-          </Link>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href='/'
-                  className='flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
-                >
-                  <Home className='h-5 w-5' />
-                  <span className='sr-only'>Dashboard</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side='right'>Dashboard</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href='/members'
-                  className='flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
-                >
-                  <Users2 className='h-5 w-5' />
-                  <span className='sr-only'>Members</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side='right'>Members</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href='/search'
-                  className='flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
-                >
-                  <Search className='h-5 w-5' />
-                  <span className='sr-only'>Search</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side='right'>Search</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </nav>
-        <nav className='mt-auto flex flex-col items-center gap-4 px-2 sm:py-5'>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href='#'
-                  className='flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8'
-                >
-                  <Settings className='h-5 w-5' />
-                  <span className='sr-only'>Settings</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side='right'>Settings</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </nav>
-      </aside>
-
-
-	);
-};
-
-export default NavMenu;
